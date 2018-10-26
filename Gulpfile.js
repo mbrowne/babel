@@ -10,15 +10,12 @@ const gutil = require("gulp-util");
 const filter = require("gulp-filter");
 const gulp = require("gulp");
 const path = require("path");
-const webpack = require("webpack");
 const merge = require("merge-stream");
 const rollup = require("rollup-stream");
 const source = require("vinyl-source-stream");
 const buffer = require("vinyl-buffer");
 const rollupBabel = require("rollup-plugin-babel");
 const rollupNodeResolve = require("rollup-plugin-node-resolve");
-const registerStandalonePackageTask = require("./scripts/gulp-tasks")
-  .registerStandalonePackageTask;
 
 const sources = ["codemods", "packages"];
 
@@ -114,7 +111,6 @@ function buildRollup(packages) {
 
 gulp.task("build", function() {
   const bundles = ["packages/babel-parser"];
-
   return merge([buildBabel(/* exclude */ bundles), buildRollup(bundles)]);
 });
 
@@ -131,42 +127,4 @@ gulp.task(
       gulp.task("build-no-bundle")
     );
   })
-);
-
-registerStandalonePackageTask(
-  gulp,
-  "babel",
-  "Babel",
-  path.join(__dirname, "packages"),
-  require("./packages/babel-core/package.json").version
-);
-
-const presetEnvWebpackPlugins = [
-  new webpack.NormalModuleReplacementPlugin(
-    /\.\/available-plugins/,
-    require.resolve(
-      path.join(
-        __dirname,
-        "./packages/babel-preset-env-standalone/src/available-plugins"
-      )
-    )
-  ),
-  new webpack.NormalModuleReplacementPlugin(
-    /caniuse-lite\/data\/regions\/.+/,
-    require.resolve(
-      path.join(
-        __dirname,
-        "./packages/babel-preset-env-standalone/src/caniuse-lite-regions"
-      )
-    )
-  ),
-];
-
-registerStandalonePackageTask(
-  gulp,
-  "babel-preset-env",
-  "babelPresetEnv",
-  path.join(__dirname, "packages"),
-  require("./packages/babel-preset-env/package.json").version,
-  presetEnvWebpackPlugins
 );
