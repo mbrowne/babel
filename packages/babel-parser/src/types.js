@@ -721,6 +721,21 @@ export type ClassPrivateProperty = NodeBase & {
   typeAnnotation?: ?TypeAnnotation, // TODO: Not in spec
 };
 
+export type ClassInstanceVariableDeclaration = NodeBase & {
+  type: "ClassInstanceVariableDeclaration",
+  key: Identifier,
+  value: ?Expression,
+  static: boolean,
+  computed: false,
+  typeAnnotation?: ?TypeAnnotation, // TODO: Not in spec
+};
+
+export type ClassInstanceVariableDeclarator = NodeBase & {
+  type: "ClassInstanceVariableDeclarator",
+  id: Identifier,
+  init: ?Expression,
+};
+
 export type OptClassDeclaration = ClassBase &
   DeclarationBase &
   HasDecorators & {
