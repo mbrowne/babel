@@ -63,7 +63,6 @@ function buildBabel(exclude) {
   return merge(
     sources.map(source => {
       const base = path.join(__dirname, source);
-
       let stream = gulp.src(getGlobFromSource(source), { base: base });
 
       if (exclude) {
@@ -90,6 +89,9 @@ function buildBabel(exclude) {
 function buildRollup(packages) {
   return merge(
     packages.map(pkg => {
+      // Matt Browne added (just for this branch)
+      // since build output might make it look like it's skipping babel-parser
+      gutil.log(`Starting to compile "${chalk.cyan(pkg)}" with rollup...`)
       return rollup({
         input: getIndexFromPackage(pkg),
         format: "cjs",
@@ -111,6 +113,7 @@ function buildRollup(packages) {
 
 gulp.task("build", function() {
   const bundles = ["packages/babel-parser"];
+  // return merge([buildBabel(/* exclude */ bundles)]);
   return merge([buildBabel(/* exclude */ bundles), buildRollup(bundles)]);
 });
 
