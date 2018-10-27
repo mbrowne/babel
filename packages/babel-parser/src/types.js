@@ -84,6 +84,11 @@ export type PrivateName = NodeBase & {
   id: Identifier,
 };
 
+export type InstanceVariableName = NodeBase & {
+  type: "InstanceVariableName",
+  id: Identifier,
+};
+
 // Literals
 
 export type Literal =

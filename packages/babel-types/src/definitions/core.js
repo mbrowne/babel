@@ -513,7 +513,11 @@ defineType("MemberExpression", {
     },
     property: {
       validate: (function() {
-        const normal = assertNodeType("Identifier", "PrivateName");
+        const normal = assertNodeType(
+          "Identifier",
+          "PrivateName",
+          "InstanceVariableName",
+        );
         const computed = assertNodeType("Expression");
 
         return function(node, key, val) {

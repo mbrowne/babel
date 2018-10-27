@@ -230,6 +230,15 @@ defineType("PrivateName", {
   },
 });
 
+defineType("InstanceVariableName", {
+  visitor: ["id"],
+  fields: {
+    id: {
+      validate: assertNodeType("Identifier"),
+    },
+  },
+});
+
 defineType("BigIntLiteral", {
   builder: ["value"],
   fields: {

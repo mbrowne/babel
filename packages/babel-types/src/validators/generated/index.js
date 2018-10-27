@@ -2100,11 +2100,31 @@ export function isBindExpression(node: Object, opts?: Object): boolean {
 
   return false;
 }
-export function isClassInstanceVariable(node: Object, opts?: Object): boolean {
+export function isClassInstanceVariableDeclaration(
+  node: Object,
+  opts?: Object,
+): boolean {
   if (!node) return false;
 
   const nodeType = node.type;
-  if (nodeType === "ClassInstanceVariable") {
+  if (nodeType === "ClassInstanceVariableDeclaration") {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
+export function isClassInstanceVariableDeclarator(
+  node: Object,
+  opts?: Object,
+): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (nodeType === "ClassInstanceVariableDeclarator") {
     if (typeof opts === "undefined") {
       return true;
     } else {
@@ -2251,6 +2271,20 @@ export function isPrivateName(node: Object, opts?: Object): boolean {
 
   const nodeType = node.type;
   if (nodeType === "PrivateName") {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
+export function isInstanceVariableName(node: Object, opts?: Object): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (nodeType === "InstanceVariableName") {
     if (typeof opts === "undefined") {
       return true;
     } else {
@@ -4126,11 +4160,37 @@ export function isJSX(node: Object, opts?: Object): boolean {
 
   return false;
 }
-export function isInstanceVariable(node: Object, opts?: Object): boolean {
+export function isInstanceVariableDeclaration(
+  node: Object,
+  opts?: Object,
+): boolean {
   if (!node) return false;
 
   const nodeType = node.type;
-  if (nodeType === "InstanceVariable" || "ClassInstanceVariable" === nodeType) {
+  if (
+    nodeType === "InstanceVariableDeclaration" ||
+    "ClassInstanceVariableDeclaration" === nodeType
+  ) {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
+export function isInstanceVariableDeclarator(
+  node: Object,
+  opts?: Object,
+): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (
+    nodeType === "InstanceVariableDeclarator" ||
+    "ClassInstanceVariableDeclarator" === nodeType
+  ) {
     if (typeof opts === "undefined") {
       return true;
     } else {

@@ -14,6 +14,12 @@ export default superClass =>
       return this.finishNode(node, "ClassInstanceVariableDeclarator");
     }
 
+    parseInstanceVariableName() {
+      const node = this.startNode();
+      node.id = this.parseIdentifier(true);
+      return this.finishNode(node, "InstanceVariableName");
+    }
+
     // ==================================
     // Overrides
     // ==================================
@@ -54,7 +60,7 @@ export default superClass =>
       if (this.eat(tt.thinArrow)) {
         const node = this.startNodeAt(startPos, startLoc);
         node.object = base;
-        node.property = this.parseIdentifier(true);
+        node.property = this.parseInstanceVariableName();
         node.computed = false;
         if (state.optionalChainMember) {
           node.optional = false;

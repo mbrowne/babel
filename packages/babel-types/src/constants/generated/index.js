@@ -46,7 +46,10 @@ export const FLOWBASEANNOTATION_TYPES =
 export const FLOWDECLARATION_TYPES = FLIPPED_ALIAS_KEYS["FlowDeclaration"];
 export const FLOWPREDICATE_TYPES = FLIPPED_ALIAS_KEYS["FlowPredicate"];
 export const JSX_TYPES = FLIPPED_ALIAS_KEYS["JSX"];
-export const INSTANCEVARIABLE_TYPES = FLIPPED_ALIAS_KEYS["InstanceVariable"];
+export const INSTANCEVARIABLEDECLARATION_TYPES =
+  FLIPPED_ALIAS_KEYS["InstanceVariableDeclaration"];
+export const INSTANCEVARIABLEDECLARATOR_TYPES =
+  FLIPPED_ALIAS_KEYS["InstanceVariableDeclarator"];
 export const PRIVATE_TYPES = FLIPPED_ALIAS_KEYS["Private"];
 export const TSTYPEELEMENT_TYPES = FLIPPED_ALIAS_KEYS["TSTypeElement"];
 export const TSTYPE_TYPES = FLIPPED_ALIAS_KEYS["TSType"];

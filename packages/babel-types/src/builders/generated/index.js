@@ -604,10 +604,14 @@ export function BindExpression(...args: Array<any>): Object {
   return builder("BindExpression", ...args);
 }
 export { BindExpression as bindExpression };
-export function ClassInstanceVariable(...args: Array<any>): Object {
-  return builder("ClassInstanceVariable", ...args);
+export function ClassInstanceVariableDeclaration(...args: Array<any>): Object {
+  return builder("ClassInstanceVariableDeclaration", ...args);
 }
-export { ClassInstanceVariable as classInstanceVariable };
+export { ClassInstanceVariableDeclaration as classInstanceVariableDeclaration };
+export function ClassInstanceVariableDeclarator(...args: Array<any>): Object {
+  return builder("ClassInstanceVariableDeclarator", ...args);
+}
+export { ClassInstanceVariableDeclarator as classInstanceVariableDeclarator };
 export function ClassProperty(...args: Array<any>): Object {
   return builder("ClassProperty", ...args);
 }
@@ -648,6 +652,10 @@ export function PrivateName(...args: Array<any>): Object {
   return builder("PrivateName", ...args);
 }
 export { PrivateName as privateName };
+export function InstanceVariableName(...args: Array<any>): Object {
+  return builder("InstanceVariableName", ...args);
+}
+export { InstanceVariableName as instanceVariableName };
 export function BigIntLiteral(...args: Array<any>): Object {
   return builder("BigIntLiteral", ...args);
 }

@@ -666,11 +666,17 @@ export function assertAwaitExpression(node: Object, opts?: Object = {}): void {
 export function assertBindExpression(node: Object, opts?: Object = {}): void {
   assert("BindExpression", node, opts);
 }
-export function assertClassInstanceVariable(
+export function assertClassInstanceVariableDeclaration(
   node: Object,
   opts?: Object = {},
 ): void {
-  assert("ClassInstanceVariable", node, opts);
+  assert("ClassInstanceVariableDeclaration", node, opts);
+}
+export function assertClassInstanceVariableDeclarator(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("ClassInstanceVariableDeclarator", node, opts);
 }
 export function assertClassProperty(node: Object, opts?: Object = {}): void {
   assert("ClassProperty", node, opts);
@@ -716,6 +722,12 @@ export function assertExportNamespaceSpecifier(
 }
 export function assertPrivateName(node: Object, opts?: Object = {}): void {
   assert("PrivateName", node, opts);
+}
+export function assertInstanceVariableName(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("InstanceVariableName", node, opts);
 }
 export function assertBigIntLiteral(node: Object, opts?: Object = {}): void {
   assert("BigIntLiteral", node, opts);
@@ -1104,8 +1116,17 @@ export function assertFlowPredicate(node: Object, opts?: Object = {}): void {
 export function assertJSX(node: Object, opts?: Object = {}): void {
   assert("JSX", node, opts);
 }
-export function assertInstanceVariable(node: Object, opts?: Object = {}): void {
-  assert("InstanceVariable", node, opts);
+export function assertInstanceVariableDeclaration(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("InstanceVariableDeclaration", node, opts);
+}
+export function assertInstanceVariableDeclarator(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("InstanceVariableDeclarator", node, opts);
 }
 export function assertPrivate(node: Object, opts?: Object = {}): void {
   assert("Private", node, opts);
