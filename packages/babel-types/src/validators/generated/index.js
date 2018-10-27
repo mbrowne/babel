@@ -2100,6 +2100,20 @@ export function isBindExpression(node: Object, opts?: Object): boolean {
 
   return false;
 }
+export function isClassInstanceVariable(node: Object, opts?: Object): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (nodeType === "ClassInstanceVariable") {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
 export function isClassProperty(node: Object, opts?: Object): boolean {
   if (!node) return false;
 
@@ -4103,6 +4117,20 @@ export function isJSX(node: Object, opts?: Object): boolean {
     "JSXOpeningFragment" === nodeType ||
     "JSXClosingFragment" === nodeType
   ) {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
+export function isInstanceVariable(node: Object, opts?: Object): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (nodeType === "InstanceVariable" || "ClassInstanceVariable" === nodeType) {
     if (typeof opts === "undefined") {
       return true;
     } else {

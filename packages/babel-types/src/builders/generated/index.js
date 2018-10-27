@@ -604,6 +604,10 @@ export function BindExpression(...args: Array<any>): Object {
   return builder("BindExpression", ...args);
 }
 export { BindExpression as bindExpression };
+export function ClassInstanceVariable(...args: Array<any>): Object {
+  return builder("ClassInstanceVariable", ...args);
+}
+export { ClassInstanceVariable as classInstanceVariable };
 export function ClassProperty(...args: Array<any>): Object {
   return builder("ClassProperty", ...args);
 }

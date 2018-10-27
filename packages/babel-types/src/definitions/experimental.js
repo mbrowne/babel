@@ -26,6 +26,52 @@ defineType("BindExpression", {
   },
 });
 
+defineType("ClassInstanceVariableDeclaration", {
+  visitor: ["key", "value", "typeAnnotation", "decorators"],
+  builder: ["key", "value", "typeAnnotation", "decorators", "computed"],
+  aliases: ["InstanceVariableDeclaration"],
+  fields: {
+    ...classMethodOrPropertyCommon,
+    value: {
+      validate: assertNodeType("Expression"),
+      optional: true,
+    },
+    definite: {
+      validate: assertValueType("boolean"),
+      optional: true,
+    },
+    typeAnnotation: {
+      validate: assertNodeType("TypeAnnotation", "TSTypeAnnotation", "Noop"),
+      optional: true,
+    },
+    decorators: {
+      validate: chain(
+        assertValueType("array"),
+        assertEach(assertNodeType("Decorator")),
+      ),
+      optional: true,
+    },
+    readonly: {
+      validate: assertValueType("boolean"),
+      optional: true,
+    },
+  },
+});
+
+defineType("ClassInstanceVariableDeclarator", {
+  visitor: ["key", "init"],
+  aliases: ["InstanceVariableDeclarator"],
+  fields: {
+    key: {
+      validate: assertNodeType("Identifier"),
+    },
+    init: {
+      optional: true,
+      validate: assertNodeType("Expression"),
+    },
+  },
+});
+
 defineType("ClassProperty", {
   visitor: ["key", "value", "typeAnnotation", "decorators"],
   builder: ["key", "value", "typeAnnotation", "decorators", "computed"],

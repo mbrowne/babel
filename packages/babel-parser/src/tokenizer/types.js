@@ -99,6 +99,7 @@ export const types: { [name: string]: TokenType } = {
   question: new TokenType("?", { beforeExpr }),
   questionDot: new TokenType("?."),
   arrow: new TokenType("=>", { beforeExpr }),
+  thinArrow: new TokenType("->"),
   template: new TokenType("template"),
   ellipsis: new TokenType("...", { beforeExpr }),
   backQuote: new TokenType("`", { startsExpr }),

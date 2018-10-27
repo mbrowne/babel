@@ -666,6 +666,12 @@ export function assertAwaitExpression(node: Object, opts?: Object = {}): void {
 export function assertBindExpression(node: Object, opts?: Object = {}): void {
   assert("BindExpression", node, opts);
 }
+export function assertClassInstanceVariable(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("ClassInstanceVariable", node, opts);
+}
 export function assertClassProperty(node: Object, opts?: Object = {}): void {
   assert("ClassProperty", node, opts);
 }
@@ -1097,6 +1103,9 @@ export function assertFlowPredicate(node: Object, opts?: Object = {}): void {
 }
 export function assertJSX(node: Object, opts?: Object = {}): void {
   assert("JSX", node, opts);
+}
+export function assertInstanceVariable(node: Object, opts?: Object = {}): void {
+  assert("InstanceVariable", node, opts);
 }
 export function assertPrivate(node: Object, opts?: Object = {}): void {
   assert("Private", node, opts);

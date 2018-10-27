@@ -91,7 +91,7 @@ function buildRollup(packages) {
     packages.map(pkg => {
       // Matt Browne added (just for this branch)
       // since build output might make it look like it's skipping babel-parser
-      gutil.log(`Starting to compile "${chalk.cyan(pkg)}" with rollup...`)
+      gutil.log(`Starting to compile "${chalk.cyan(pkg)}" with rollup...`);
       return rollup({
         input: getIndexFromPackage(pkg),
         format: "cjs",
