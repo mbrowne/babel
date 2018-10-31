@@ -99,6 +99,8 @@ export const types: { [name: string]: TokenType } = {
   question: new TokenType("?", { beforeExpr }),
   questionDot: new TokenType("?."),
   arrow: new TokenType("=>", { beforeExpr }),
+  // @NB: This probably won't be needed since the syntax for classes 1.1 will probably change from -> to ::
+  // Leaving it just in case...
   thinArrow: new TokenType("->"),
   template: new TokenType("template"),
   ellipsis: new TokenType("...", { beforeExpr }),

@@ -26,11 +26,12 @@ export default superClass =>
 
     parseClassMember(classBody, member, state) {
       // console.log('this.state.type', this.state.type);
-      if (this.match(tt._var)) {
+      const { type } = this.state;
+      if (type === tt._var || type === tt._let || type === tt._const) {
         // parseVarStatement() does almost exactly what we want, so call it first
         // and then modify the result...
         const node = this.startNode();
-        this.parseVarStatement(node, this.state.type); // eats 'var'
+        this.parseVarStatement(node, this.state.type); // eats 'var', 'let', or 'const'
         node.type = "ClassInstanceVariableDeclaration";
 
         node.declarations = node.declarations.map(({ id, ...decl }) => {
@@ -57,7 +58,7 @@ export default superClass =>
       state,
     ) {
     /* eslint-enable */
-      if (this.eat(tt.thinArrow)) {
+      if (this.eat(tt.doubleColon)) {
         const node = this.startNodeAt(startPos, startLoc);
         node.object = base;
         node.property = this.parseInstanceVariableName();

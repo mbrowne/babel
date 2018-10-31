@@ -532,6 +532,8 @@ export default class Tokenizer extends LocationParser {
       this.finishOp(tt.plusMin, 1);
     }
 
+    // @NB: This probably won't be needed since the syntax for classes 1.1 will probably change from -> to ::
+    // Leaving it just in case...
     if (this.hasPlugin("classes1.1")) {
       if (code === charCodes.dash && next === charCodes.greaterThan) {
         // '->'
@@ -703,7 +705,7 @@ export default class Tokenizer extends LocationParser {
 
       case charCodes.colon:
         if (
-          this.hasPlugin("functionBind") &&
+          (this.hasPlugin("functionBind") || this.hasPlugin("classes1.1")) &&
           this.input.charCodeAt(this.state.pos + 1) === charCodes.colon
         ) {
           this.finishOp(tt.doubleColon, 2);
