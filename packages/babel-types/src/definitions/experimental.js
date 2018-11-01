@@ -60,7 +60,7 @@ defineType("ClassInstanceVariableDeclaration", {
 
 defineType("ClassInstanceVariableDeclarator", {
   visitor: ["key", "init"],
-  aliases: ["InstanceVariableDeclarator"],
+  aliases: ["InstanceVariable", "InstanceVariableDeclarator"],
   fields: {
     key: {
       validate: assertNodeType("Identifier"),

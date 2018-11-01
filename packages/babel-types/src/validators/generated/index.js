@@ -4180,6 +4180,23 @@ export function isInstanceVariableDeclaration(
 
   return false;
 }
+export function isInstanceVariable(node: Object, opts?: Object): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (
+    nodeType === "InstanceVariable" ||
+    "ClassInstanceVariableDeclarator" === nodeType
+  ) {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
 export function isInstanceVariableDeclarator(
   node: Object,
   opts?: Object,

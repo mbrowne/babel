@@ -48,6 +48,7 @@ export const FLOWPREDICATE_TYPES = FLIPPED_ALIAS_KEYS["FlowPredicate"];
 export const JSX_TYPES = FLIPPED_ALIAS_KEYS["JSX"];
 export const INSTANCEVARIABLEDECLARATION_TYPES =
   FLIPPED_ALIAS_KEYS["InstanceVariableDeclaration"];
+export const INSTANCEVARIABLE_TYPES = FLIPPED_ALIAS_KEYS["InstanceVariable"];
 export const INSTANCEVARIABLEDECLARATOR_TYPES =
   FLIPPED_ALIAS_KEYS["InstanceVariableDeclarator"];
 export const PRIVATE_TYPES = FLIPPED_ALIAS_KEYS["Private"];

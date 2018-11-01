@@ -1122,6 +1122,9 @@ export function assertInstanceVariableDeclaration(
 ): void {
   assert("InstanceVariableDeclaration", node, opts);
 }
+export function assertInstanceVariable(node: Object, opts?: Object = {}): void {
+  assert("InstanceVariable", node, opts);
+}
 export function assertInstanceVariableDeclarator(
   node: Object,
   opts?: Object = {},
