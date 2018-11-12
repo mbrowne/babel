@@ -84,7 +84,7 @@ export function validatePlugins(plugins: PluginList) {
 
 // These plugins are defined using a mixin which extends the parser class.
 
-import classes11 from "./plugins/classes1.1";
+import classMembers from "./plugins/class-members";
 import estree from "./plugins/estree";
 import flow from "./plugins/flow";
 import jsx from "./plugins/jsx";
@@ -93,14 +93,14 @@ import typescript from "./plugins/typescript";
 // NOTE: estree must load first; flow and typescript must load last.
 export const mixinPluginNames = [
   "estree",
-  "classes1.1",
+  "classMembers",
   "jsx",
   "flow",
   "typescript",
 ];
 export const mixinPlugins: { [name: string]: MixinPlugin } = {
   estree,
-  "classes1.1": classes11,
+  classMembers,
   jsx,
   flow,
   typescript,

@@ -3,7 +3,7 @@ import { types as tt } from "../tokenizer/types";
 export default superClass =>
   class extends superClass {
     parseClassInstanceVariable(node) {
-      this.expectPlugin("classes1.1");
+      this.expectPlugin("classMembers");
       // This only affects properties, not methods.
       if (this.isNonstaticConstructor(node)) {
         this.raise(
