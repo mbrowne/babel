@@ -71,4 +71,27 @@ export default superClass =>
       }
       return super.parseSubscript(base, startPos, startLoc, noCalls, state);
     }
+
+    parseClassProperty(node) {
+      if (!node.typeAnnotation) {
+        this.expectPlugin("classMembers");
+      }
+
+      const oldInMethod = this.state.inMethod;
+      this.state.inMethod = false;
+      this.state.inClassProperty = true;
+
+      if (this.match(tt.eq)) {
+        this.expectPlugin("classMembers");
+        this.next();
+        node.value = this.parseMaybeAssign();
+      } else {
+        node.value = null;
+      }
+      this.semicolon();
+      this.state.inClassProperty = false;
+      this.state.inMethod = oldInMethod;
+
+      return this.finishNode(node, "ClassProperty");
+    }
   };
