@@ -31,7 +31,10 @@ export default superClass =>
         // parseVarStatement() does almost exactly what we want, so call it first
         // and then modify the result...
         const node = this.startNode();
-        this.parseVarStatement(node, this.state.type); // eats 'var', 'let', or 'const'
+        this.parseVarStatement(node, this.state.type); // eats let' or 'const'
+        if (node.kind !== "let" && node.kind !== "const") {
+          this.unexpected();
+        }
         node.type = "ClassInstanceVariableDeclaration";
 
         node.declarations = node.declarations.map(({ id, ...decl }) => {
