@@ -2,10 +2,65 @@ import { types as tt } from "../tokenizer/types";
 
 export default superClass =>
   class extends superClass {
-    parseClassInstanceVariable(node) {
+    // Parse list of instance variable declarators
+    // Adapted from parseVar()
+    /* eslint-disable */
+    parseInstanceVariableDeclarators(
+      node /*: N.VariableDeclaration*/,
+      kind /*: TokenType*/,
+    ) /*: N.VariableDeclaration*/ {
+      /* eslint-enable */
+      const declarations = (node.declarations = []);
+      // $FlowFixMe
+      node.kind = kind.keyword;
+      for (;;) {
+        const decl = this.startNode();
+        this.parseInstanceVarHead(decl);
+        if (this.eat(tt.eq)) {
+          decl.init = this.parseMaybeAssign(false);
+        } else {
+          if (kind === tt._const) {
+            this.unexpected();
+            // // `const` with no initializer is allowed in TypeScript.
+            // // It could be a declaration like `const x: number;`.
+            // if (!this.hasPlugin("typescript")) {
+            //   this.unexpected();
+            // }
+          } else if (decl.key.type !== "Identifier") {
+            this.unexpected();
+          }
+          decl.init = null;
+        }
+        declarations.push(this.parseInstanceVariable(decl));
+        if (!this.eat(tt.comma)) break;
+      }
+      return node;
+    }
+
+    parseInstanceVarHead(decl) {
+      let isStatic = false;
+      if (this.state.value === "static") {
+        isStatic = true;
+        decl.key = this.parseIdentifier(true); // eats 'static'
+      }
+      decl.key = this.parseBindingAtom();
+      decl.static = isStatic;
+      this.checkLVal(
+        decl.key,
+        true,
+        undefined,
+        "class instance variable declaration",
+      );
+    }
+
+    parseInstanceVariable(node) {
       this.expectPlugin("classMembers");
-      // This only affects properties, not methods.
-      if (this.isNonstaticConstructor(node)) {
+      if (
+        !node.computed &&
+        !node.static &&
+        (node.key.name === "constructor" || // Identifier
+          node.key.value === "constructor") // String literal
+      ) {
         this.raise(
           node.key.start,
           "Classes may not have an instance variable named 'constructor'",
@@ -27,27 +82,18 @@ export default superClass =>
     parseClassMember(classBody, member, state) {
       // console.log('this.state.type', this.state.type);
       const { type } = this.state;
-      if (type === tt._var || type === tt._let || type === tt._const) {
-        // parseVarStatement() does almost exactly what we want, so call it first
-        // and then modify the result...
+      if (type === tt._let || type === tt._const) {
         const node = this.startNode();
-        this.parseVarStatement(node, this.state.type); // eats let' or 'const'
-        if (node.kind !== "let" && node.kind !== "const") {
-          this.unexpected();
-        }
-        node.type = "ClassInstanceVariableDeclaration";
-
-        node.declarations = node.declarations.map(({ id, ...decl }) => {
-          const instanceVar = {
-            ...decl,
-            key: id,
-          };
-          this.parseClassInstanceVariable(instanceVar);
-          return instanceVar;
-        });
+        this.next();
+        // eats 'let' or 'const'
+        this.parseInstanceVariableDeclarators(node, type);
+        this.semicolon();
+        this.finishNode(node, "ClassInstanceVariableDeclaration");
 
         classBody.body.push(node);
         return;
+      } else if (type === tt._var) {
+        this.unexpected();
       }
       return super.parseClassMember(classBody, member, state);
     }
@@ -75,6 +121,7 @@ export default superClass =>
       return super.parseSubscript(base, startPos, startLoc, noCalls, state);
     }
 
+    // parse public property
     parseClassProperty(node) {
       if (!node.typeAnnotation) {
         this.expectPlugin("classMembers");
