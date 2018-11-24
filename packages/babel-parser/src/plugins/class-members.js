@@ -2,20 +2,30 @@ import { types as tt } from "../tokenizer/types";
 
 export default superClass =>
   class extends superClass {
-    // Parse list of instance variable declarators
+    // Parse list of class variable and instance variable declarators
     // Adapted from parseVar()
     /* eslint-disable */
-    parseInstanceVariableDeclarators(
+    parseClassAndInstanceVarDeclarators(
       node /*: N.VariableDeclaration*/,
       kind /*: TokenType*/,
     ) /*: N.VariableDeclaration*/ {
       /* eslint-enable */
+      this.expectPlugin("classMembers");
       const declarations = (node.declarations = []);
       // $FlowFixMe
       node.kind = kind.keyword;
+      let isStatic = false;
+      if (this.state.value === "static") {
+        isStatic = true;
+        this.parseIdentifier(true); // eats 'static'
+      }
       for (;;) {
         const decl = this.startNode();
-        this.parseInstanceVarHead(decl);
+        if (isStatic) {
+          this.parseClassVarHead(decl);
+        } else {
+          this.parseInstanceVarHead(decl);
+        }
         if (this.eat(tt.eq)) {
           decl.init = this.parseMaybeAssign(false);
         } else {
@@ -26,25 +36,34 @@ export default superClass =>
             // if (!this.hasPlugin("typescript")) {
             //   this.unexpected();
             // }
-          } else if (decl.key.type !== "Identifier") {
+          } else if (
+            // ClassInstanceVariable has `key` whereas ClassVariable has `id`.
+            // This may be refactored in the future.
+            (decl.key && decl.key.type !== "Identifier") ||
+            (decl.id && decl.id.type !== "Identifier")
+          ) {
             this.unexpected();
           }
           decl.init = null;
         }
-        declarations.push(this.parseInstanceVariable(decl));
+        declarations.push(
+          isStatic
+            ? this.parseClassVariable(decl)
+            : this.parseInstanceVariable(decl),
+        );
         if (!this.eat(tt.comma)) break;
       }
-      return node;
+      this.semicolon();
+      return this.finishNode(
+        node,
+        isStatic
+          ? "ClassVariableDeclaration"
+          : "ClassInstanceVariableDeclaration",
+      );
     }
 
     parseInstanceVarHead(decl) {
-      let isStatic = false;
-      if (this.state.value === "static") {
-        isStatic = true;
-        decl.key = this.parseIdentifier(true); // eats 'static'
-      }
       decl.key = this.parseBindingAtom();
-      decl.static = isStatic;
       this.checkLVal(
         decl.key,
         true,
@@ -53,8 +72,15 @@ export default superClass =>
       );
     }
 
+    parseClassVarHead(decl) {
+      // Using 'id' instead of 'key' like methods and properties (and at least currently,
+      // instance variables as well) because we are reusing the VariableDeclarator type
+      // for the 'declarations' array of ClassVariables.
+      decl.id = this.parseBindingAtom();
+      this.checkLVal(decl.id, true, undefined, "class variable declaration");
+    }
+
     parseInstanceVariable(node) {
-      this.expectPlugin("classMembers");
       if (
         !node.computed &&
         !node.static &&
@@ -67,6 +93,21 @@ export default superClass =>
         );
       }
       return this.finishNode(node, "ClassInstanceVariableDeclarator");
+    }
+
+    parseClassVariable(node) {
+      if (
+        !node.computed &&
+        !node.static &&
+        (node.id.name === "constructor" || // Identifier
+          node.id.value === "constructor") // String literal
+      ) {
+        this.raise(
+          node.id.start,
+          "Classes may not have a private class variable named 'constructor'",
+        );
+      }
+      return this.finishNode(node, "VariableDeclarator");
     }
 
     parseInstanceVariableName() {
@@ -86,9 +127,7 @@ export default superClass =>
         const node = this.startNode();
         this.next();
         // eats 'let' or 'const'
-        this.parseInstanceVariableDeclarators(node, type);
-        this.semicolon();
-        this.finishNode(node, "ClassInstanceVariableDeclaration");
+        this.parseClassAndInstanceVarDeclarators(node, type);
 
         classBody.body.push(node);
         return;

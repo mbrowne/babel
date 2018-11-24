@@ -612,6 +612,10 @@ export function ClassInstanceVariableDeclarator(...args: Array<any>): Object {
   return builder("ClassInstanceVariableDeclarator", ...args);
 }
 export { ClassInstanceVariableDeclarator as classInstanceVariableDeclarator };
+export function ClassVariableDeclaration(...args: Array<any>): Object {
+  return builder("ClassVariableDeclaration", ...args);
+}
+export { ClassVariableDeclaration as classVariableDeclaration };
 export function ClassProperty(...args: Array<any>): Object {
   return builder("ClassProperty", ...args);
 }

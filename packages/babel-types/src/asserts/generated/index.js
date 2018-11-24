@@ -678,6 +678,12 @@ export function assertClassInstanceVariableDeclarator(
 ): void {
   assert("ClassInstanceVariableDeclarator", node, opts);
 }
+export function assertClassVariableDeclaration(
+  node: Object,
+  opts?: Object = {},
+): void {
+  assert("ClassVariableDeclaration", node, opts);
+}
 export function assertClassProperty(node: Object, opts?: Object = {}): void {
   assert("ClassProperty", node, opts);
 }

@@ -2,6 +2,7 @@
 import defineType, {
   assertEach,
   assertNodeType,
+  assertOneOf,
   assertValueType,
   chain,
 } from "./utils";
@@ -26,15 +27,23 @@ defineType("BindExpression", {
   },
 });
 
+const classElementCommonWithoutStatic = { ...classMethodOrPropertyCommon };
+delete classElementCommonWithoutStatic["static"];
+
 defineType("ClassInstanceVariableDeclaration", {
   visitor: ["key", "value", "typeAnnotation", "decorators"],
   builder: ["key", "value", "typeAnnotation", "decorators", "computed"],
   aliases: ["InstanceVariableDeclaration"],
   fields: {
-    ...classMethodOrPropertyCommon,
-    value: {
-      validate: assertNodeType("Expression"),
-      optional: true,
+    ...classElementCommonWithoutStatic,
+    kind: {
+      validate: chain(assertValueType("string"), assertOneOf("let", "const")),
+    },
+    declarations: {
+      validate: chain(
+        assertValueType("array"),
+        assertEach(assertNodeType("ClassInstanceVariableDeclarator")),
+      ),
     },
     definite: {
       validate: assertValueType("boolean"),
@@ -68,6 +77,48 @@ defineType("ClassInstanceVariableDeclarator", {
     init: {
       optional: true,
       validate: assertNodeType("Expression"),
+    },
+  },
+});
+
+// static class variable
+defineType("ClassVariableDeclaration", {
+  visitor: ["key", "value", "typeAnnotation", "decorators"],
+  builder: ["key", "value", "typeAnnotation", "decorators", "computed"],
+  fields: {
+    ...classElementCommonWithoutStatic,
+    kind: {
+      validate: chain(assertValueType("string"), assertOneOf("let", "const")),
+    },
+    declarations: {
+      validate: chain(
+        assertValueType("array"),
+        // If needed this can be changed to a class-members specific type, e.g. ClassVariableDeclarator
+        assertEach(assertNodeType("VariableDeclarator")),
+      ),
+    },
+    value: {
+      validate: assertNodeType("Expression"),
+      optional: true,
+    },
+    definite: {
+      validate: assertValueType("boolean"),
+      optional: true,
+    },
+    typeAnnotation: {
+      validate: assertNodeType("TypeAnnotation", "TSTypeAnnotation", "Noop"),
+      optional: true,
+    },
+    decorators: {
+      validate: chain(
+        assertValueType("array"),
+        assertEach(assertNodeType("Decorator")),
+      ),
+      optional: true,
+    },
+    readonly: {
+      validate: assertValueType("boolean"),
+      optional: true,
     },
   },
 });
