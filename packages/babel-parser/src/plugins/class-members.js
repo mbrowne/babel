@@ -21,11 +21,7 @@ export default superClass =>
       }
       for (;;) {
         const decl = this.startNode();
-        if (isStatic) {
-          this.parseClassVarHead(decl);
-        } else {
-          this.parseInstanceVarHead(decl);
-        }
+        this.parseClassOrInstanceVarHead(decl, isStatic);
         if (this.eat(tt.eq)) {
           decl.init = this.parseMaybeAssign(false);
         } else {
@@ -36,12 +32,7 @@ export default superClass =>
             // if (!this.hasPlugin("typescript")) {
             //   this.unexpected();
             // }
-          } else if (
-            // ClassInstanceVariable has `key` whereas ClassVariable has `id`.
-            // This may be refactored in the future.
-            (decl.key && decl.key.type !== "Identifier") ||
-            (decl.id && decl.id.type !== "Identifier")
-          ) {
+          } else if (decl.id.type !== "Identifier") {
             this.unexpected();
           }
           decl.init = null;
@@ -62,33 +53,27 @@ export default superClass =>
       );
     }
 
-    parseInstanceVarHead(decl) {
-      decl.key = this.parseBindingAtom();
+    parseClassOrInstanceVarHead(decl, isStatic) {
+      decl.id = this.parseBindingAtom();
       this.checkLVal(
-        decl.key,
+        decl.id,
         true,
         undefined,
-        "class instance variable declaration",
+        `${
+          isStatic ? "class variable" : "class instance variable"
+        } declaration`,
       );
-    }
-
-    parseClassVarHead(decl) {
-      // Using 'id' instead of 'key' like methods and properties (and at least currently,
-      // instance variables as well) because we are reusing the VariableDeclarator type
-      // for the 'declarations' array of ClassVariables.
-      decl.id = this.parseBindingAtom();
-      this.checkLVal(decl.id, true, undefined, "class variable declaration");
     }
 
     parseInstanceVariable(node) {
       if (
         !node.computed &&
         !node.static &&
-        (node.key.name === "constructor" || // Identifier
-          node.key.value === "constructor") // String literal
+        (node.id.name === "constructor" || // Identifier
+          node.id.value === "constructor") // String literal
       ) {
         this.raise(
-          node.key.start,
+          node.id.start,
           "Classes may not have an instance variable named 'constructor'",
         );
       }

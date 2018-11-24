@@ -68,10 +68,10 @@ defineType("ClassInstanceVariableDeclaration", {
 });
 
 defineType("ClassInstanceVariableDeclarator", {
-  visitor: ["key", "init"],
+  visitor: ["id", "init"],
   aliases: ["InstanceVariable", "InstanceVariableDeclarator"],
   fields: {
-    key: {
+    id: {
       validate: assertNodeType("Identifier"),
     },
     init: {
@@ -81,11 +81,12 @@ defineType("ClassInstanceVariableDeclarator", {
   },
 });
 
-// static class variable
+// private static class variables
 defineType("ClassVariableDeclaration", {
   visitor: ["typeAnnotation", "decorators"],
   builder: ["typeAnnotation", "decorators", "computed"],
   fields: {
+    // @NB: This still includes `computed`, which perhaps should be excluded here as well
     ...classElementCommonWithoutStatic,
     kind: {
       validate: chain(assertValueType("string"), assertOneOf("let", "const")),
