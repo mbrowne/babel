@@ -2134,6 +2134,23 @@ export function isClassInstanceVariableDeclarator(
 
   return false;
 }
+export function isClassVariableDeclaration(
+  node: Object,
+  opts?: Object,
+): boolean {
+  if (!node) return false;
+
+  const nodeType = node.type;
+  if (nodeType === "ClassVariableDeclaration") {
+    if (typeof opts === "undefined") {
+      return true;
+    } else {
+      return shallowEqual(node, opts);
+    }
+  }
+
+  return false;
+}
 export function isClassProperty(node: Object, opts?: Object): boolean {
   if (!node) return false;
 
